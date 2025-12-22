@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -46,6 +47,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -65,7 +67,7 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktorfit.lib)
     implementation(libs.ktorfit.converters.flow)
-//    ksp(libs.ktorfit.ksp)
+    ksp(libs.ktorfit.ksp)
 
     implementation(libs.kotlinx.serialization.json)
 
@@ -77,6 +79,14 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+
+    implementation(libs.supabase.kt)
+    implementation(libs.auth.kt)
+    implementation(libs.postgrest.kt)
+    implementation(libs.realtime.kt)
+    implementation(libs.coil.compose)
+
+
 //    ksp(libs.androidx.room.compiler)
 
 
