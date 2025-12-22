@@ -127,7 +127,6 @@ object AppTypography{
     val homeTitleLargeLight: TextStyle
         @Composable get() = TextStyle(
             fontSize = 38.sp,
-            lineHeight = 50.sp,
             fontFamily = sfUiDisplayFontFamily(),
             fontWeight = FontWeight.Light  ,
         )
@@ -213,7 +212,7 @@ object AppTypography{
             lineHeight = 20.sp,
             fontFamily = sfUiDisplayFontFamily(),
             fontWeight = FontWeight.Normal,
-            letterSpacing = 0.3.sp
+            letterSpacing = 0.3.sp,
         )
 
     val detailSmallBody : TextStyle

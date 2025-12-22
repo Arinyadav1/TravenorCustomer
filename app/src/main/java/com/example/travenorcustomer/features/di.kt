@@ -1,5 +1,6 @@
 package com.example.travenorcustomer.features
 
+import com.example.travenorcustomer.features.details.DetailsViewModel
 import com.example.travenorcustomer.features.home.HomeViewModel
 import com.example.travenorcustomer.features.navigation.AppRootViewModel
 import com.example.travenorcustomer.features.otpVerification.VerificationViewModel
@@ -13,4 +14,5 @@ val viewModelModule = module {
     viewModelOf(::VerificationViewModel)
     viewModelOf(::AppRootViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::DetailsViewModel)
 }

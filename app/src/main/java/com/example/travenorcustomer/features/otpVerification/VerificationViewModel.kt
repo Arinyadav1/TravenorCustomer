@@ -155,16 +155,16 @@ data class VerificationState(
     val isShowResend: Boolean = false,
 )
 
-sealed class VerificationAction {
-    data class OnOtpValueChange(val index: Int, val value: String) : VerificationAction()
-    object OnVerify : VerificationAction()
-    object OnNavigateBack : VerificationAction()
-    object OnResendHandle : VerificationAction()
+sealed interface VerificationAction {
+    data class OnOtpValueChange(val index: Int, val value: String) : VerificationAction
+    object OnVerify : VerificationAction
+    object OnNavigateBack : VerificationAction
+    object OnResendHandle : VerificationAction
 }
 
-sealed class VerificationEvent {
-    object OnNavigationBack : VerificationEvent()
-    object OnNavigationToHomeScreen : VerificationEvent()
+sealed interface VerificationEvent {
+    object OnNavigationBack : VerificationEvent
+    object OnNavigationToHomeScreen : VerificationEvent
 }
 
 fun countdownTimer(totalSeconds: Int): Flow<String?> = flow {

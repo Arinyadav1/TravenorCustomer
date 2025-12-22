@@ -20,7 +20,7 @@
     <string name="resending">Resending…</string>
     <string name="explore_the">Explore the</string>
     <string name="beautiful">Beautiful</string>
-    <string name="world">world</string>
+    <string name="world">world!</string>
     <string name="best_destination">Best Destination</string>
     <string name="detail">Detail</string>
     <string name="book_now">Book Now</string>
@@ -29,4 +29,6 @@
     <string name="reject">Reject</string>
     <string name="read_less">Read Less</string>
     <string name="read_more">Read More</string>
+    <string name="person">Person</string>
+    <string name="about_destination">About Destination</string>
 </resources>

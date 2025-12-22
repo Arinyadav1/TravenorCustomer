@@ -100,8 +100,8 @@ data class SignInState(
     val error: String? = null,
 )
 
-sealed class SignInAction {
-    data class OnEmailChange(val email: String) : SignInAction()
-    object OnSignIn : SignInAction()
-    object OnNavigationBack : SignInAction()
+sealed interface SignInAction {
+    data class OnEmailChange(val email: String) : SignInAction
+    object OnSignIn : SignInAction
+    object OnNavigationBack : SignInAction
 }

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -47,24 +49,37 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.travenorcustomer.R
 import com.example.travenorcustomer.features.components.TravenorAsyncImage
 import com.example.travenorcustomer.features.components.TravenorExpandableText
 import com.example.travenorcustomer.features.components.TravenorIconButton
+import com.example.travenorcustomer.features.components.TravenorShimmerLoadingOverlay
 import com.example.travenorcustomer.features.components.TravenorTextButton
 import com.example.travenorcustomer.ui.theme.AppColors
+import com.example.travenorcustomer.ui.theme.AppTypography
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun DetailsScreen(
     modifier: Modifier = Modifier,
-    onNavigationBack : () -> Unit
+    onNavigationBack: () -> Unit,
+    viewModel: DetailsViewModel = koinViewModel()
 ) {
+    val state = viewModel.stateFlow.collectAsStateWithLifecycle().value
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
 
+                else -> {}
+            }
+        }
+    }
     Box(modifier = modifier.fillMaxSize()) {
 
         TravenorAsyncImage(
-            image = "https://pwbxzqxqkksrnlibjrnt.supabase.co/storage/v1/object/public/destination-image/kotkata_cover.jpg",
+            image = state.destination?.coverImage,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.7f),
@@ -86,15 +101,15 @@ fun DetailsScreen(
             )
 
             Text(
-                text = "Details", color = Color.White, fontFamily = FontFamily(
-                    Font(R.font.sf_ui_display_semibold)
-                ), fontSize = 18.sp, modifier = Modifier.align(Alignment.Center)
+                text = stringResource(R.string.detail),
+                style = AppTypography.detailSmallTitle,
+                color = Color.White,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
 
-
         DestinationBottomCard(
-            onBookNowClick = { }, modifier = Modifier.align(Alignment.BottomCenter)
+            onBookNowClick = { }, modifier = Modifier.align(Alignment.BottomCenter), state = state
         )
     }
 }
@@ -102,179 +117,186 @@ fun DetailsScreen(
 
 @Composable
 fun DestinationBottomCard(
-    onBookNowClick: () -> Unit, modifier: Modifier = Modifier
+    onBookNowClick: () -> Unit, modifier: Modifier = Modifier, state: DetailsState
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-            .background(Color.White)
-            .padding(20.dp)
-    ) {
-
-        Box(
-            modifier = Modifier
-                .size(width = 36.dp, height = 5.dp)
-                .clip(RoundedCornerShape(50))
-                .background(AppColors.lightSub.copy(alpha = 0.3f))
-                .align(Alignment.CenterHorizontally)
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        Row(
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .background(Color.White)
+                .padding(20.dp)
         ) {
-            Column {
-                Text(
-                    "Kotkata Reservoid", fontFamily = FontFamily(
-                        Font(R.font.sf_pro_rounded_medium)
-                    ), fontSize = 24.sp, lineHeight = 32.sp
-                )
-                Text(
-                    "Kolkata, India", color = AppColors.lightSub, fontFamily = FontFamily(
-                        Font(R.font.sf_pro_rounded_medium)
-                    ), fontSize = 15.sp, lineHeight = 20.sp
-                )
-            }
-            Image(
-                painter = painterResource(R.drawable.user),
-                contentDescription = null,
+
+            Box(
                 modifier = Modifier
-                    .size(48.dp)
-                    .clip(
-                        CircleShape
-                    )
+                    .size(width = 36.dp, height = 5.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(AppColors.lightSub.copy(alpha = 0.3f))
+                    .align(Alignment.CenterHorizontally)
             )
-        }
 
-        Spacer(Modifier.height(25.dp))
+            Spacer(Modifier.height(16.dp))
 
-        Row(
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
             Row(
+                modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.location),
+                Column {
+                    Text(
+                        text = state.destination?.destinationName.orEmpty(),
+                        style = AppTypography.detailTitle,
+                        fontFamily = FontFamily(
+                            Font(R.font.sf_pro_rounded_medium)
+                        ),
+                        fontSize = 24.sp,
+                        lineHeight = 32.sp
+                    )
+                    Text(
+                        text = "${state.destination?.city}, ${state.destination?.country}",
+                        color = AppColors.lightSub,
+                        style = AppTypography.detailBody,
+                    )
+                }
+                Image(
+                    painter = painterResource(R.drawable.user),
                     contentDescription = null,
-                    tint = AppColors.lightSub,
-                    modifier = Modifier.size(16.dp)
-                )
-
-                Text(
-                    text = "Kotkata, India", fontFamily = FontFamily(
-                        Font(R.font.sf_pro_rounded_medium)
-                    ), fontSize = 15.sp, color = AppColors.lightSub
-                )
-            }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Star,
-                    contentDescription = null,
-                    tint = AppColors.lightYellow,
-                    modifier = Modifier.size(17.dp)
-                )
-
-                Spacer(modifier.height(5.dp))
-
-                Text(
-                    text = "4.7",
-                    fontFamily = FontFamily(
-                        Font(R.font.sf_ui_display_regular)
-                    ),
-                    fontSize = 15.sp,
-                )
-
-                Text(
-                    text = "(3456)", fontFamily = FontFamily(
-                        Font(R.font.sf_ui_display_regular)
-                    ), fontSize = 15.sp, color = AppColors.lightSub
-                )
-            }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "$65/", fontFamily = FontFamily(
-                        Font(R.font.sf_ui_display_regular)
-                    ), fontSize = 15.sp, color = AppColors.primaryBlue
-                )
-
-                Text(
-                    text = "Person", fontFamily = FontFamily(
-                        Font(R.font.sf_ui_display_regular)
-                    ), fontSize = 15.sp, color = AppColors.lightSub
-                )
-            }
-        }
-
-        Spacer(Modifier.height(25.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            repeat(5) { index ->
-                if (index <= 4) {
-                    Box {
-
-                        TravenorAsyncImage(
-                            image = "https://pwbxzqxqkksrnlibjrnt.supabase.co/storage/v1/object/public/destination-image/kotkata_cover.jpg",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(50.dp)
-                                .clip(RoundedCornerShape(12.dp))
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(
+                            CircleShape
                         )
+                )
+            }
 
-                        if (index == 4) {
-                            Box(
+            Spacer(Modifier.height(25.dp))
+
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.location),
+                        contentDescription = null,
+                        tint = AppColors.lightSub,
+                        modifier = Modifier.size(16.dp)
+                    )
+
+                    Text(
+                        text = state.destination?.city.orEmpty(),
+                        style = AppTypography.detailBody,
+                        color = AppColors.lightSub
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = null,
+                        tint = AppColors.lightYellow,
+                        modifier = Modifier.size(17.dp)
+                    )
+
+                    Spacer(modifier.height(5.dp))
+
+                    Text(
+                        text = state.destination?.rating.toString(),
+                        style = AppTypography.detailBody,
+                    )
+
+                    Text(
+                        text = "(${state.destination?.totalReview})",
+                        style = AppTypography.detailBody,
+                        color = AppColors.lightSub
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "$${state.destination?.pricePerPerson}/",
+                        style = AppTypography.detailBody,
+                        color = AppColors.primaryBlue
+                    )
+
+                    Text(
+                        text = stringResource(R.string.person),
+                        style = AppTypography.detailBody,
+                        color = AppColors.lightSub
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(25.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val imageList = state.destination?.images
+                imageList?.forEachIndexed { index, value ->
+                    if (index <= 4) {
+                        Box {
+
+                            TravenorAsyncImage(
+                                image = value.image,
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
-                                    .matchParentSize()
+                                    .size(50.dp)
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(Color.Black.copy(alpha = 0.2f)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "+" + (20 - 5), fontFamily = FontFamily(
-                                        Font(R.font.sf_ui_display_regular)
-                                    ), fontSize = 14.sp, color = Color.White
-                                )
+                            )
+
+                            if (imageList.size - 5 != 0) {
+                                Box(
+                                    modifier = Modifier
+                                        .matchParentSize()
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(Color.Black.copy(alpha = 0.2f)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "+" + (imageList.size - 5), fontFamily = FontFamily(
+                                            Font(R.font.sf_ui_display_regular)
+                                        ), fontSize = 14.sp, color = Color.White
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
+
+            Spacer(Modifier.height(25.dp))
+
+            Text(
+                text = stringResource(R.string.about_destination),
+                style = AppTypography.detailSmallTitle
+            )
+
+            Spacer(Modifier.height(10.dp))
+
+            TravenorExpandableText(state.destination?.description.orEmpty())
+
+            Spacer(Modifier.height(25.dp))
+
+            TravenorTextButton(
+                onClick = {}, btnText = "Book Now"
+            )
+
         }
 
-        Spacer(Modifier.height(25.dp))
-
-        Text(
-            "About Destination", fontSize = 20.sp, fontFamily = FontFamily(
-                Font(R.font.sf_ui_display_semibold)
-            )
-        )
-
-        Spacer(Modifier.height(10.dp))
-
-        TravenorExpandableText("Kerala Backwaters provide a peaceful and rejuvenating experience through scenic waterways, houseboat stays, and lush green surroundings. This destination is ideal for relaxation, wellness retreats, and romantic getaways.")
-
-        Spacer(Modifier.height(25.dp))
-
-        TravenorTextButton(
-            onClick = {}, btnText = "Book Now"
-        )
-
+        if (state.isLoading) {
+            TravenorShimmerLoadingOverlay()
+        }
     }
 }
 

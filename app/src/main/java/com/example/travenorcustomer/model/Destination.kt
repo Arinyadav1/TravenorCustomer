@@ -29,7 +29,10 @@ data class Destination(
     @SerialName("owner_id")
     val ownerId: String,
 
-    val images: List<DestinationImage>
+    val images: List<DestinationImage>,
+
+    @SerialName("is_active")
+    val isActive : Boolean
 )
 
 

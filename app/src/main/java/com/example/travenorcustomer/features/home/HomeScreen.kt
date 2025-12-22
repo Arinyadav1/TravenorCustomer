@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -53,7 +55,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.travenorcustomer.R
+import com.example.travenorcustomer.features.components.TravenorAsyncImage
+import com.example.travenorcustomer.features.components.TravenorShimmerLoadingOverlay
 import com.example.travenorcustomer.ui.theme.AppColors
+import com.example.travenorcustomer.ui.theme.AppTypography
 import org.koin.androidx.compose.koinViewModel
 import java.nio.file.WatchEvent
 
@@ -80,290 +85,278 @@ fun HomeScreen(
         activity?.finish()
     }
 
-    Column(
-        modifier = modifier
-            .padding(horizontal = 20.dp, vertical = 10.dp)
-            .verticalScroll(state = rememberScrollState())
-    ) {
-        Card(
-            modifier = Modifier.height(44.dp),
-            shape = RoundedCornerShape(22.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = AppColors.grey.copy(alpha = 0.1f)
-            )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+                .verticalScroll(state = rememberScrollState())
         ) {
-            Row(
-                modifier = Modifier.padding(5.dp),
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(
-                            shape = CircleShape
-                        )
-                        .size(36.dp)
-                        .background(
-                            Color(0xFFFFEADF)
-                        ),
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.profileimage),
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .padding(top = 5.dp)
-                            .fillMaxSize(),
-                    )
-                }
-
-                Text(
-                    text = state.userName,
-                    fontFamily = FontFamily(
-                        Font(R.font.sf_pro_rounded_medium)
-                    ),
-                    fontSize = 16.sp,
-                    color = Color(0xFF1B1E28),
-                    modifier = Modifier.padding(end = 10.dp)
+            Card(
+                modifier = Modifier.height(44.dp),
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = AppColors.grey.copy(alpha = 0.1f)
                 )
-
-            }
-        }
-
-        Spacer(Modifier.height(50.dp))
-
-
-        Text(
-            text = "Explore the",
-            fontFamily = FontFamily(
-                Font(R.font.sf_ui_display_light)
-            ),
-            fontSize = 38.sp,
-        )
-
-        Row {
-            Text(
-                text = "Beautiful ",
-                fontFamily = FontFamily(
-                    Font(R.font.sf_ui_display_bold)
-                ),
-                fontSize = 38.sp,
-                lineHeight = 50.sp
-            )
-            Box(
-                modifier = Modifier.width(IntrinsicSize.Min),
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy((-7).dp)
+                Row(
+                    modifier = Modifier.padding(5.dp),
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(
+                                shape = CircleShape
+                            )
+                            .size(36.dp)
+                            .background(
+                                Color(0xFFFFEADF)
+                            ),
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.profileimage),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .padding(top = 5.dp)
+                                .fillMaxSize(),
+                        )
+                    }
+
                     Text(
-                        text = "world!",
-                        fontFamily = FontFamily(Font(R.font.sf_ui_display_bold)),
-                        fontSize = 38.sp,
-                        color = AppColors.orange,
-                        lineHeight = 38.sp
+                        text = state.userName,
+                        fontFamily = FontFamily(
+                            Font(R.font.sf_pro_rounded_medium)
+                        ),
+                        fontSize = 16.sp,
+                        color = Color(0xFF1B1E28),
+                        modifier = Modifier.padding(end = 10.dp)
                     )
 
-                    Image(
-                        painter = painterResource(R.drawable.world_txt_image),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        contentScale = ContentScale.FillWidth
-                    )
                 }
             }
-        }
 
-        Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(50.dp))
 
-        Text(
-            text = "Best Destination",
-            fontFamily = FontFamily(
-                Font(R.font.sf_ui_display_semibold)
-            ),
-            fontSize = 20.sp,
-        )
 
-        Spacer(Modifier.height(20.dp))
+            Text(
+                text = stringResource(R.string.explore_the),
+                style = AppTypography.homeTitleLargeLight,
+            )
 
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            items(
-                10
-            ) {
-                ElevatedCard(
-                    shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = Color.White
-                    ),
-                    elevation = CardDefaults.elevatedCardElevation(
-                        defaultElevation = 0.5.dp
-                    ),
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = {
-                                viewModel.onAction(HomeAction.OnNavigateToDetailScreen)
-                            }
-                        )
-                        .size(height = 384.dp, width = 268.dp),
+            Row {
+                Text(
+                    text = stringResource(R.string.beautiful) + " ",
+                    style = AppTypography.homeTitleLargeBold,
+                )
+                Box(
+                    modifier = Modifier.width(IntrinsicSize.Min),
                 ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy((-7).dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.world),
+                            style = AppTypography.homeTitleLargeBold,
+                            color = AppColors.orange,
+                        )
 
-                    Box {
-                        Column(
+                        Image(
+                            painter = painterResource(R.drawable.world_txt_image),
+                            contentDescription = null,
                             modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxSize(),
-                            verticalArrangement = Arrangement.SpaceEvenly,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painter = painterResource(R.drawable.boat),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(width = 240.dp, height = 286.dp)
-                                    .clip(
-                                        RoundedCornerShape(20.dp)
-                                    ),
-                                contentScale = ContentScale.Crop
-                            )
+                                .fillMaxWidth(),
+                            contentScale = ContentScale.FillWidth
+                        )
+                    }
+                }
+            }
 
-                            Row(
+            Spacer(Modifier.height(40.dp))
+
+            Text(
+                text = stringResource(R.string.best_destination),
+                fontFamily = FontFamily(
+                    Font(R.font.sf_ui_display_semibold)
+                ),
+                fontSize = 20.sp,
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(
+                    state.destinations
+                ) { destination ->
+                    ElevatedCard(
+                        shape = RoundedCornerShape(24.dp),
+                        colors = CardDefaults.elevatedCardColors(
+                            containerColor = Color.White
+                        ),
+                        elevation = CardDefaults.elevatedCardElevation(
+                            defaultElevation = 0.5.dp
+                        ),
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {
+                                    viewModel.onAction(
+                                        HomeAction.OnNavigateToDetailScreen(
+                                            destination.id
+                                        )
+                                    )
+                                }
+                            )
+                            .size(height = 384.dp, width = 268.dp),
+                    ) {
+
+                        Box {
+                            Column(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                    .padding(8.dp)
+                                    .fillMaxSize(),
+                                verticalArrangement = Arrangement.SpaceEvenly,
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(
-                                    text = "Kotkata Reservoir",
-                                    fontFamily = FontFamily(
-                                        Font(R.font.sf_pro_rounded_medium)
-                                    ),
-                                    fontSize = 18.sp,
+                                TravenorAsyncImage(
+                                    image = destination.coverImage,
+                                    modifier = Modifier
+                                        .size(width = 240.dp, height = 286.dp)
+                                        .clip(
+                                            RoundedCornerShape(20.dp)
+                                        ),
+                                    contentScale = ContentScale.Crop
                                 )
 
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 12.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Star,
-                                        contentDescription = null,
-                                        tint = AppColors.lightYellow,
-                                        modifier = Modifier.size(17.dp)
-                                    )
-
                                     Text(
-                                        text = "4.7",
-                                        fontFamily = FontFamily(
-                                            Font(R.font.sf_ui_display_regular)
-                                        ),
-                                        fontSize = 15.sp,
-                                    )
-                                }
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.location),
-                                        contentDescription = null,
-                                        tint = AppColors.lightSub,
-                                        modifier = Modifier.size(16.dp)
+                                        text = destination.destinationName,
+                                        style = AppTypography.homeTitleMedium,
                                     )
 
-                                    Text(
-                                        text = "Kotkata, India",
-                                        fontFamily = FontFamily(
-                                            Font(R.font.sf_pro_rounded_medium)
-                                        ),
-                                        fontSize = 15.sp,
-                                        color = AppColors.lightSub
-                                    )
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Star,
+                                            contentDescription = null,
+                                            tint = AppColors.lightYellow,
+                                            modifier = Modifier.size(17.dp)
+                                        )
+
+                                        Text(
+                                            text = destination.rating.toString(),
+                                            style = AppTypography.homeLabel,
+                                        )
+                                    }
                                 }
 
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy((-10).dp)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 12.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    repeat(4) {
-                                        if (it <= 2) {
-                                            Image(
-                                                painter = painterResource(R.drawable.user),
-                                                contentDescription = null,
-                                                modifier = Modifier
-                                                    .size(25.dp)
-                                                    .clip(
-                                                        CircleShape
-                                                    )
-                                            )
-                                        } else {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(25.dp)
-                                                    .clip(
-                                                        CircleShape
-                                                    )
-                                                    .background(AppColors.lightFrame),
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                Text(
-                                                    text = "+50",
-                                                    fontFamily = FontFamily(
-                                                        Font(R.font.sf_ui_display_medium)
-                                                    ),
-                                                    fontSize = 11.sp,
-                                                    color = Color(0xFF1B1E28)
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.location),
+                                            contentDescription = null,
+                                            tint = AppColors.lightSub,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+
+                                        Text(
+                                            text = "${destination.city}, ${destination.country}",
+                                            style = AppTypography.homeLabel,
+                                            color = AppColors.lightSub
+                                        )
+                                    }
+
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy((-10).dp)
+                                    ) {
+                                        repeat(4) {
+                                            if (it <= 2) {
+                                                Image(
+                                                    painter = painterResource(R.drawable.user),
+                                                    contentDescription = null,
+                                                    modifier = Modifier
+                                                        .size(25.dp)
+                                                        .clip(
+                                                            CircleShape
+                                                        )
                                                 )
+                                            } else {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .size(25.dp)
+                                                        .clip(
+                                                            CircleShape
+                                                        )
+                                                        .background(AppColors.lightFrame),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    Text(
+                                                        text = "+50",
+                                                        style = AppTypography.homeSmallLabel,
+                                                        color = AppColors.customBlack
+                                                    )
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
 
 
-                        Box(
-                            modifier = Modifier
-                                .padding(28.dp)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.TopEnd
-                        ) {
-                            IconButton(
+                            Box(
                                 modifier = Modifier
-                                    .background(
-                                        color = Color(0xFF1B1E28).copy(alpha = 0.2f),
-                                        shape = CircleShape
-                                    )
-                                    .size(40.dp),
-                                onClick = {}
+                                    .padding(28.dp)
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.TopEnd
                             ) {
-                                Icon(
+                                IconButton(
                                     modifier = Modifier
-                                        .size(20.dp),
-                                    painter = painterResource(R.drawable.bookmark),
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
+                                        .background(
+                                            color = Color(0xFF1B1E28).copy(alpha = 0.2f),
+                                            shape = CircleShape
+                                        )
+                                        .size(40.dp),
+                                    onClick = {}
+                                ) {
+                                    Icon(
+                                        modifier = Modifier
+                                            .size(20.dp),
+                                        painter = painterResource(R.drawable.bookmark),
+                                        contentDescription = null,
+                                        tint = Color.White
+                                    )
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
             }
+        }
+
+        if (state.isLoading) {
+            TravenorShimmerLoadingOverlay()
         }
     }
 }

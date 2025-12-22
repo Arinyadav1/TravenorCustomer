@@ -33,15 +33,7 @@ fun TravenorAsyncImage(
         modifier = modifier,
         model = image,
         loading = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    strokeWidth = 2.dp,
-                )
-            }
+            TravenorShimmerLoadingOverlay()
         },
         error = {
             Box(
