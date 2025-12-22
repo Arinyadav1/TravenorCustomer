@@ -2,29 +2,25 @@ package com.example.travenorcustomer.features.signIn
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.travenorcustomer.R
 import com.example.travenorcustomer.features.components.TravenorIconButton
 import com.example.travenorcustomer.features.components.TravenorTextButton
 import com.example.travenorcustomer.features.components.TravenorTextField
 import com.example.travenorcustomer.ui.theme.AppColors
+import com.example.travenorcustomer.ui.theme.AppTypography
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -66,22 +62,16 @@ fun SignInScreen(
         Spacer(Modifier.height(130.dp))
 
         Text(
-            text = "Sign in now",
-            fontFamily = FontFamily(
-                Font(R.font.sf_ui_display_semibold)
-            ),
-            fontSize = 26.sp,
+            text = stringResource(R.string.sign_in_sign_in_now),
+            style = AppTypography.signInTitle,
         )
 
         Spacer(Modifier.height(15.dp))
 
 
         Text(
-            text = "Please sign in to continue our app",
-            fontFamily = FontFamily(
-                Font(R.font.sf_ui_display_regular)
-            ),
-            fontSize = 16.sp,
+            text = stringResource(R.string.sign_in_please_sign_in),
+            style = AppTypography.signInBody,
             color = AppColors.lightSub
         )
 
@@ -94,7 +84,7 @@ fun SignInScreen(
             onValueChange = {
                 viewModel.onAction(SignInAction.OnEmailChange(it))
             },
-            placeholder = "email",
+            placeholder = stringResource(R.string.label_email),
             errorMsg = state.error
         )
 
@@ -104,7 +94,9 @@ fun SignInScreen(
             onClick = {
                 viewModel.onAction(SignInAction.OnSignIn)
             },
-            btnText = if (state.isLoading) "Signing..." else "Sign In"
+            btnText = if (state.isLoading) stringResource(R.string.button_signing) else stringResource(
+                R.string.button_sign_in
+            )
         )
     }
 

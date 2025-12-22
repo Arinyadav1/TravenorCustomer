@@ -22,6 +22,7 @@ object AppColors{
 
     val lightSub = Color(0xFF7D848D)
     val lightGrey = Color(0xFFF7F7F9)
+    val error = Color(0xFFba1a1a)
     val grey = Color.Gray
 
     val orange = Color(0xFFFF7029)

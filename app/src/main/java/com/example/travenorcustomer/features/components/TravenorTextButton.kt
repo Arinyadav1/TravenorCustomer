@@ -9,14 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.travenorcustomer.R
 import com.example.travenorcustomer.ui.theme.AppColors
+import com.example.travenorcustomer.ui.theme.AppTypography
 
 @Composable
 fun TravenorTextButton(
@@ -44,11 +39,7 @@ fun TravenorTextButton(
         ) {
             Text(
                 text = btnText,
-                fontFamily = FontFamily(
-                    Font(R.font.sf_ui_display_semibold)
-                ),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center
+                style = AppTypography.textButton
             )
         }
     }

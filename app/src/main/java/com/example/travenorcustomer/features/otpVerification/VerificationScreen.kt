@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +29,7 @@ import com.example.travenorcustomer.features.components.TravenorIconButton
 import com.example.travenorcustomer.features.components.TravenorTextButton
 import com.example.travenorcustomer.features.components.TravenorTextField
 import com.example.travenorcustomer.ui.theme.AppColors
+import com.example.travenorcustomer.ui.theme.AppTypography
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -69,25 +70,19 @@ fun VerificationScreen(
         Spacer(Modifier.height(130.dp))
 
         Text(
-            text = "OTP Verification",
-            fontFamily = FontFamily(
-                Font(R.font.sf_ui_display_semibold)
-            ),
-            fontSize = 26.sp,
+            text = stringResource(R.string.otp_verification),
+            style = AppTypography.signInTitle,
         )
 
         Spacer(Modifier.height(15.dp))
 
 
         Text(
-            text = "Please check your email ${state.email} to see the verification code",
-            fontFamily = FontFamily(
-                Font(R.font.sf_ui_display_regular)
+            text = stringResource(R.string.otp_verification_description_before_email) + " ${state.email} " + stringResource(
+                R.string.otp_verification_description_after_email
             ),
-            fontSize = 16.sp,
             color = AppColors.lightSub,
-            textAlign = TextAlign.Center,
-            lineHeight = 20.sp
+            style = AppTypography.signInBody
         )
 
         Spacer(Modifier.height(40.dp))
@@ -118,17 +113,21 @@ fun VerificationScreen(
         if (state.error != null) {
             Text(
                 text = state.error,
-                color = Color.Red
+                fontSize = 12.sp,
+                textAlign = TextAlign.Start,
+                color = AppColors.error,
+                modifier = Modifier.fillMaxWidth()
             )
         }
-
 
         Spacer(Modifier.height(25.dp))
 
 
         TravenorTextButton(
             onClick = { viewModel.onAction(VerificationAction.OnVerify) },
-            btnText = if (state.loading) "Verifying..." else "Verify",
+            btnText = if (state.loading) stringResource(R.string.button_verifying) else stringResource(
+                R.string.button_verify
+            ),
             enabled = state.otpValues[state.otpValues.lastIndex].isNotEmpty()
         )
 
@@ -146,13 +145,11 @@ fun VerificationScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = if (state.resendLoading) "Resending code" else "Resend code to",
-                    fontFamily = FontFamily(
-                        Font(R.font.sf_ui_display_regular)
+                    text = if (state.resendLoading) stringResource(R.string.resending) else stringResource(
+                        R.string.resend
                     ),
-                    fontSize = 14.sp,
                     color = AppColors.lightSub,
-                    textAlign = TextAlign.Center
+                    style = AppTypography.signInLabel
                 )
                 if (state.countDownTimer != null) {
                     Text(

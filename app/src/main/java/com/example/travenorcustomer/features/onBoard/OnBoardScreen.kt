@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.example.travenorcustomer.R
 import com.example.travenorcustomer.features.components.TravenorTextButton
 import com.example.travenorcustomer.ui.theme.AppColors
+import com.example.travenorcustomer.ui.theme.AppTypography
 
 @Composable
 fun OnBoardScreen(
@@ -61,23 +63,14 @@ fun OnBoardScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Life is short and the",
-                fontFamily = FontFamily(
-                    Font(R.font.geometr415_blk_bt)
-                ),
-                fontWeight = FontWeight(400),
-                fontSize = 30.sp,
-                lineHeight = 36.sp
+                text = stringResource(R.string.on_board_title_life_is_short),
+                style = AppTypography.onBoardTitle
             )
 
             Row {
                 Text(
-                    text = "world is ",
-                    fontFamily = FontFamily(
-                        Font(R.font.geometr415_blk_bt)
-                    ),
-                    fontWeight = FontWeight(400),
-                    fontSize = 30.sp,
+                    text = stringResource(R.string.on_board_title_world) +" ",
+                    style = AppTypography.onBoardTitle
                 )
                 Box(
                     modifier = Modifier.width(IntrinsicSize.Min),
@@ -86,12 +79,8 @@ fun OnBoardScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "wide",
-                            fontFamily = FontFamily(
-                                Font(R.font.geometr415_blk_bt)
-                            ),
-                            fontWeight = FontWeight(400),
-                            fontSize = 30.sp,
+                            text = stringResource(R.string.on_board_title_wide),
+                            style = AppTypography.onBoardTitle,
                             color = AppColors.orange
                         )
                         Image(
@@ -103,29 +92,23 @@ fun OnBoardScreen(
                 }
             }
 
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(15.dp))
 
             Text(
-                text = "At Friends tours and travel, we customize reliable and trutworthy educational tours to destinations all over the world",
-                fontFamily = FontFamily(
-                    Font(R.font.gill_sans_mt)
-                ),
-                fontWeight = FontWeight(400),
-                fontSize = 16.sp,
+                text = stringResource(R.string.on_board_description),
                 color = AppColors.lightSub,
-                textAlign = TextAlign.Center,
-                lineHeight = 24.sp
+                style = AppTypography.onBoardDescription
             )
         }
 
-        Spacer(Modifier.height(80.dp))
+        Spacer(Modifier.height(75.dp))
 
         TravenorTextButton(
             modifier = Modifier.padding(horizontal = 20.dp),
             onClick = {
                 navigateToSignInScreen()
             },
-            btnText = "Get Started"
+            btnText = stringResource(R.string.button_get_started)
         )
 
     }

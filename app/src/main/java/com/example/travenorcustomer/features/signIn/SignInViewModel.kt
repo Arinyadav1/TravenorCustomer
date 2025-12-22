@@ -1,8 +1,11 @@
 package com.example.travenorcustomer.features.signIn
 
+import android.provider.Settings.Secure.getString
 import android.util.Log
 import android.util.Patterns
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
+import com.example.travenorcustomer.R
 import com.example.travenorcustomer.data.AuthenticationRepository
 import com.example.travenorcustomer.features.BaseViewModel
 import com.example.travenorcustomer.network.BuildConfig
@@ -44,18 +47,16 @@ class SignInViewModel(
                         )
                     )
                 } catch (e: AuthRestException) {
-                    Log.d("ARINYADAV", e.message.toString())
                     mutableStateFlow.update {
                         it.copy(
-                            error = "Unexpected Auth Error",
+                            error = e.message,
                             isLoading = false
                         )
                     }
                 } catch (e: Throwable) {
-                    Log.d("ARINYADAV", e.message.toString())
                     mutableStateFlow.update {
                         it.copy(
-                            error = "Unexpected Error",
+                            error = e.message,
                             isLoading = false
                         )
                     }

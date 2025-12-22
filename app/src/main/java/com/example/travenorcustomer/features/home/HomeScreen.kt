@@ -89,7 +89,7 @@ fun HomeScreen(
             modifier = Modifier.height(44.dp),
             shape = RoundedCornerShape(22.dp),
             colors = CardDefaults.cardColors(
-                containerColor = AppColors.grey
+                containerColor = AppColors.grey.copy(alpha = 0.1f)
             )
         ) {
             Row(

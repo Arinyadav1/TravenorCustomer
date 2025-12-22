@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.travenorcustomer.R
 import com.example.travenorcustomer.ui.theme.AppColors
+import com.example.travenorcustomer.ui.theme.AppTypography
 
 @Composable
 fun TravenorTextField(
@@ -40,7 +41,6 @@ fun TravenorTextField(
         keyboardOptions = keyboardOptions,
         singleLine = true,
         modifier = modifier
-            .height(75.dp)
             .width(50.dp),
         shape = RoundedCornerShape(16.dp),
         colors = TextFieldDefaults.colors(
@@ -51,11 +51,9 @@ fun TravenorTextField(
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent
         ),
-        textStyle = TextStyle.Default.copy(
-            fontFamily = FontFamily(
-                Font(R.font.sf_ui_display_regular)
-            ), fontSize = 16.sp, color = Color(0xFF1B1E28),
-            textAlign = textAlign
+        textStyle = AppTypography.signInBody.copy(
+            textAlign = textAlign,
+            color = AppColors.customBlack
         ),
         placeholder = {
             placeholder?.let {

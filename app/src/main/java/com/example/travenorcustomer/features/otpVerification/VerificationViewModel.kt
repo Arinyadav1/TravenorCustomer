@@ -8,6 +8,8 @@ import com.example.travenorcustomer.data.AuthenticationRepository
 import com.example.travenorcustomer.features.BaseViewModel
 import com.example.travenorcustomer.features.navigation.VerificationScreenRoute
 import io.github.jan.supabase.auth.exception.AuthRestException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,10 +17,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class VerificationViewModel(
-    private val repository: AuthenticationRepository,
-    savedStateHandle: SavedStateHandle
+    private val repository: AuthenticationRepository, savedStateHandle: SavedStateHandle
 ) : BaseViewModel<VerificationState, VerificationAction, VerificationEvent>(VerificationState()) {
-    val route = savedStateHandle.toRoute<VerificationScreenRoute>()
+    private val route = savedStateHandle.toRoute<VerificationScreenRoute>()
+    private var countdownJob: Job? = null
 
     init {
         mutableStateFlow.update {
@@ -29,15 +31,14 @@ class VerificationViewModel(
     }
 
     private fun countDown() {
-        viewModelScope.launch {
-            countdownTimer(90)
-                .collect { time ->
-                    mutableStateFlow.update {
-                        it.copy(
-                            countDownTimer = time
-                        )
-                    }
+        countdownJob = viewModelScope.launch {
+            countdownTimer(90).collect { time ->
+                mutableStateFlow.update {
+                    it.copy(
+                        countDownTimer = time
+                    )
                 }
+            }
         }
     }
 
@@ -48,12 +49,15 @@ class VerificationViewModel(
                     it.copy(
                         otpValues = it.otpValues.mapIndexed { i, old ->
                             if (i == action.index) action.value else old
-                        }
+                        },
+                        error = null
                     )
                 }
             }
 
             VerificationAction.OnVerify -> {
+                countdownJob?.cancel()
+
                 if (!state.loading) {
                     countDown()
                     otpVerification()
@@ -78,16 +82,14 @@ class VerificationViewModel(
     fun otpVerification() {
         mutableStateFlow.update {
             it.copy(
-                isShowResend = true,
-                loading = true
+                isShowResend = true, loading = true, error = null
             )
         }
         viewModelScope.launch {
             try {
                 delay(10000)
                 repository.otpValidation(
-                    email = route.email,
-                    otp = state.otpValues.joinToString("")
+                    email = route.email, otp = state.otpValues.joinToString("")
                 )
 
                 sendEvent(
@@ -96,30 +98,20 @@ class VerificationViewModel(
 
                 mutableStateFlow.update {
                     it.copy(
-                        isShowResend = false,
-                        loading = false,
-                        countDownTimer = null
+                        isShowResend = false, loading = false, countDownTimer = null
                     )
                 }
             } catch (e: AuthRestException) {
-                Log.d("Otp_ARINYADAV", e.message.toString())
                 mutableStateFlow.update {
                     it.copy(
-                        error = "Unexpected Verifying Error",
-                        isShowResend = false,
-                        loading = false,
-                        countDownTimer = null
+                        error = e.description, loading = false, countDownTimer = null
                     )
                 }
 
             } catch (e: Throwable) {
-                Log.d("Otp_ARINYADAV", e.message.toString())
                 mutableStateFlow.update {
                     it.copy(
-                        error = "Unexpected Error",
-                        isShowResend = false,
-                        loading = false,
-                        countDownTimer = null
+                        error = e.message, loading = false, countDownTimer = null
                     )
                 }
             }
@@ -160,7 +152,7 @@ data class VerificationState(
     val resendLoading: Boolean = false,
     val otpValues: List<String> = listOf("", "", "", "", "", ""),
     val countDownTimer: String? = null,
-    val isShowResend: Boolean = false
+    val isShowResend: Boolean = false,
 )
 
 sealed class VerificationAction {

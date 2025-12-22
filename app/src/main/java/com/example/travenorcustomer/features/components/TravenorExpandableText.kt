@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.sp
 import com.example.travenorcustomer.R
 import com.example.travenorcustomer.ui.theme.AppColors
+import com.example.travenorcustomer.ui.theme.AppTypography
 
 @Composable
 fun TravenorExpandableText(
@@ -52,7 +54,7 @@ fun TravenorExpandableText(
                         tag = "toggle",
                         styles = readMoreStyle,
                         linkInteractionListener = { expanded = false })
-                ) { append("Read Less") }
+                ) { append(stringResource(R.string.read_less)) }
             } else {
                 append(cutText ?: text)
                 if (cutText != null) {
@@ -62,7 +64,7 @@ fun TravenorExpandableText(
                             tag = "toggle",
                             styles = readMoreStyle,
                             linkInteractionListener = { expanded = true })
-                    ) { append("Read More") }
+                    ) { append(stringResource(R.string.read_more)) }
                 }
             }
         }
@@ -70,12 +72,8 @@ fun TravenorExpandableText(
         Text(
             modifier = modifier,
             text = annotatedString,
-            style = TextStyle(
-                color = AppColors.lightSub,
-                fontSize = 13.sp,
-                lineHeight = 22.sp,
-                fontFamily = FontFamily(Font(R.font.sf_ui_display_regular))
-            ),
+            color = AppColors.lightSub,
+            style = AppTypography.detailSmallBody,
             maxLines = if (expanded) Int.MAX_VALUE else lineLimit,
             onTextLayout = { layoutResult ->
                 if (layoutResult.hasVisualOverflow && !expanded) {

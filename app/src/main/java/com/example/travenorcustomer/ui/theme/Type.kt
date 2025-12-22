@@ -6,6 +6,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.travenorcustomer.R
 
@@ -45,7 +46,7 @@ private fun geometrBlkBtFontFamily(): FontFamily {
     )
 }
 
-val TravenorTypography = Typography(
+val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
@@ -70,7 +71,7 @@ val TravenorTypography = Typography(
     */
 )
 
-object AppTypoGraphy{
+object AppTypography{
 
     val onBoardTitle: TextStyle
         @Composable get() = TextStyle(
@@ -85,7 +86,8 @@ object AppTypoGraphy{
             fontSize = 16.sp,
             lineHeight = 24.sp,
             fontFamily = gillSansMtFontFamily(),
-            fontWeight = FontWeight.Normal  ,
+            fontWeight = FontWeight.Normal,
+            textAlign = TextAlign.Center
         )
 
     val textButton: TextStyle
@@ -94,6 +96,7 @@ object AppTypoGraphy{
             lineHeight = 20.sp,
             fontFamily = sfUiDisplayFontFamily(),
             fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
         )
 
     val signInTitle: TextStyle
@@ -104,12 +107,13 @@ object AppTypoGraphy{
             fontWeight = FontWeight.SemiBold  ,
         )
 
-    val signInDescription: TextStyle
+    val signInBody: TextStyle
         @Composable get() = TextStyle(
             fontSize = 16.sp,
             lineHeight = 20.sp,
             fontFamily = sfUiDisplayFontFamily(),
-            fontWeight = FontWeight.Normal  ,
+            fontWeight = FontWeight.Normal,
+            textAlign = TextAlign.Center
         )
 
     val signInLabel: TextStyle
