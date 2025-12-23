@@ -88,6 +88,7 @@ fun HomeScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = modifier
+                .fillMaxSize()
                 .padding(horizontal = 20.dp, vertical = 10.dp)
                 .verticalScroll(state = rememberScrollState())
         ) {
@@ -194,9 +195,6 @@ fun HomeScreen(
                         shape = RoundedCornerShape(24.dp),
                         colors = CardDefaults.elevatedCardColors(
                             containerColor = Color.White
-                        ),
-                        elevation = CardDefaults.elevatedCardElevation(
-                            defaultElevation = 0.5.dp
                         ),
                         modifier = Modifier
                             .clickable(
