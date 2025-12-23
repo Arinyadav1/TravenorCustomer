@@ -6,6 +6,7 @@ import com.example.travenorcustomer.data.AuthenticationRepository
 import com.example.travenorcustomer.data.DestinationsRepository
 import com.example.travenorcustomer.features.BaseViewModel
 import com.example.travenorcustomer.model.Destination
+import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
@@ -19,7 +20,7 @@ class HomeViewModel(
     init {
         mutableStateFlow.update {
             it.copy(
-                userName = repository.userInfo()?.email?.substringBefore("@") ?: ""
+                userInfo = repository.userInfo()
             )
         }
         getAllDestinations()
@@ -52,14 +53,19 @@ class HomeViewModel(
     override fun handleAction(action: HomeAction) {
         when (action) {
             is HomeAction.OnNavigateToDetailScreen -> {
-                sendEvent(HomeEvent.NavigateToDetailScreen(action.destinationId))
+                sendEvent(
+                    HomeEvent.NavigateToDetailScreen(
+                        action.destinationId,
+                        state.userInfo?.id ?: ""
+                    )
+                )
             }
         }
     }
 }
 
 data class HomeState(
-    val userName: String = "",
+    val userInfo: UserInfo? = null,
     val destinations: List<Destination> = emptyList(),
     val isLoading: Boolean = false
 ) {
@@ -68,7 +74,7 @@ data class HomeState(
 }
 
 sealed interface HomeEvent {
-    data class NavigateToDetailScreen(val destinationId: String) : HomeEvent
+    data class NavigateToDetailScreen(val destinationId: String, val userId: String) : HomeEvent
 }
 
 sealed interface HomeAction {

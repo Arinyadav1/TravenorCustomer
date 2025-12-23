@@ -64,6 +64,7 @@ ktorfit-ksp = { module = "de.jensklingenberg.ktorfit:ktorfit-ksp", version.ref =
 ktorfit-lib = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "ktorfit" }
 postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt", version.ref = "authKt" }
 realtime-kt = { module = "io.github.jan-tennert.supabase:realtime-kt", version.ref = "authKt" }
+storage-kt = { module = "io.github.jan-tennert.supabase:storage-kt", version.ref = "authKt" }
 supabase-kt = { module = "io.github.jan-tennert.supabase:supabase-kt", version.ref = "supabaseKt" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 

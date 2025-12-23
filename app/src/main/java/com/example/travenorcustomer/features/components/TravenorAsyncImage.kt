@@ -36,17 +36,7 @@ fun TravenorAsyncImage(
             TravenorShimmerLoadingOverlay()
         },
         error = {
-            Box(
-                modifier = Modifier.fillMaxSize(.9f),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.BrokenImage,
-                    contentDescription = "Image not loaded",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.size(40.dp),
-                )
-            }
+            TravenorShimmerLoadingOverlay()
         },
         contentDescription = null,
         imageLoader = imageLoader,

@@ -9,4 +9,6 @@ object BuildConfig{
 object Constants{
     const val ALL_DESTINATION = "all_destinations"
     const val IS_ACTIVE = "is_active"
+    const val BOOKING = "booking"
+    const val PUBLIC_SCHEME = "public"
 }

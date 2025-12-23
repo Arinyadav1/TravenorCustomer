@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,28 +25,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.travenorcustomer.R
@@ -68,11 +57,14 @@ fun DetailsScreen(
     viewModel: DetailsViewModel = koinViewModel()
 ) {
     val state = viewModel.stateFlow.collectAsStateWithLifecycle().value
+    var bookingStatus by rememberSaveable { mutableStateOf(UiStatus.BOOK_NOW.value) }
+
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
-
-                else -> {}
+                DetailsEvent.OnNavigateBack -> onNavigationBack()
+                DetailsEvent.OnAcceptBooking -> bookingStatus = UiStatus.ACCEPTED.value
+                DetailsEvent.OnRequestBooking -> bookingStatus = UiStatus.REQUESTING.value
             }
         }
     }
@@ -95,7 +87,9 @@ fun DetailsScreen(
 
             TravenorIconButton(
                 iconColor = Color.White,
-                onClick = { },
+                onClick = {
+                    viewModel.onAction(DetailsAction.OnNavigateBack)
+                },
                 bgColor = Color(0xFF1B1E28).copy(alpha = 0.2f),
                 modifier = Modifier.align(Alignment.CenterStart)
             )
@@ -109,7 +103,12 @@ fun DetailsScreen(
         }
 
         DestinationBottomCard(
-            onBookNowClick = { }, modifier = Modifier.align(Alignment.BottomCenter), state = state
+            onBookNowClick = {
+                viewModel.onAction(DetailsAction.OnRequestBooking)
+            },
+            modifier = Modifier.align(Alignment.BottomCenter),
+            state = state,
+            bookingStatus = bookingStatus
         )
     }
 }
@@ -117,7 +116,10 @@ fun DetailsScreen(
 
 @Composable
 fun DestinationBottomCard(
-    onBookNowClick: () -> Unit, modifier: Modifier = Modifier, state: DetailsState
+    onBookNowClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    state: DetailsState,
+    bookingStatus: String
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -289,7 +291,10 @@ fun DestinationBottomCard(
             Spacer(Modifier.height(25.dp))
 
             TravenorTextButton(
-                onClick = {}, btnText = "Book Now"
+                onClick = {
+                    onBookNowClick()
+                },
+                btnText = bookingStatus
             )
 
         }

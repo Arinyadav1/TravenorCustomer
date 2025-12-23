@@ -67,7 +67,7 @@ import java.nio.file.WatchEvent
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navigateToDetailScreen: (String) -> Unit,
+    navigateToDetailScreen: (String, String) -> Unit,
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val state = viewModel.stateFlow.collectAsStateWithLifecycle().value
@@ -76,7 +76,7 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
-                is HomeEvent.NavigateToDetailScreen -> navigateToDetailScreen(event.destinationId)
+                is HomeEvent.NavigateToDetailScreen -> navigateToDetailScreen(event.destinationId, event.userId)
             }
         }
     }
@@ -124,7 +124,7 @@ fun HomeScreen(
                     }
 
                     Text(
-                        text = state.userName,
+                        text = state.userInfo?.email?.substringBefore("@") ?: "",
                         fontFamily = FontFamily(
                             Font(R.font.sf_pro_rounded_medium)
                         ),

@@ -19,6 +19,7 @@ import com.example.travenorcustomer.features.signIn.SignInScreen
 import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
+import kotlin.String
 
 @Serializable
 object OnBoardScreenRoute
@@ -30,7 +31,7 @@ object SignInScreenRoute
 object HomeScreenRoute
 
 @Serializable
-data class DetailScreenRoute(val destinationId: String)
+data class DetailScreenRoute(val destinationId: String, val userId : String)
 
 @Serializable
 data class VerificationScreenRoute(val email: String)
@@ -106,6 +107,6 @@ fun NavController.navigateToVerificationScreen(email: String) {
     this.navigate(VerificationScreenRoute(email = email))
 }
 
-fun NavController.navigateToDetailScreen(destinationId: String) {
-    this.navigate(DetailScreenRoute(destinationId = destinationId))
+fun NavController.navigateToDetailScreen(destinationId: String, userId : String) {
+    this.navigate(DetailScreenRoute(destinationId = destinationId, userId = userId))
 }

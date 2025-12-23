@@ -86,6 +86,9 @@ dependencies {
     implementation(libs.realtime.kt)
     implementation(libs.coil.compose)
 
+    implementation("io.ktor:ktor-client-okhttp:3.3.3")
+
+
 
 //    ksp(libs.androidx.room.compiler)
 
