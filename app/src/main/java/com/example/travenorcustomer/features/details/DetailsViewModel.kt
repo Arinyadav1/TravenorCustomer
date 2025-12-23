@@ -131,7 +131,6 @@ sealed interface DetailsEvent {
 
 enum class UiStatus(val value: String) {
     ACCEPTED("Accepted"),
-    REJECTED("Rejected"),
     REQUESTING("Requesting..."),
     BOOK_NOW("Book Now")
 }

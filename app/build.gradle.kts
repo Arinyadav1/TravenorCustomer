@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ktorfit)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -65,9 +63,6 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.logging)
-    implementation(libs.ktorfit.lib)
-    implementation(libs.ktorfit.converters.flow)
-    ksp(libs.ktorfit.ksp)
 
     implementation(libs.kotlinx.serialization.json)
 
@@ -77,20 +72,16 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-
     implementation(libs.supabase.kt)
     implementation(libs.auth.kt)
     implementation(libs.postgrest.kt)
     implementation(libs.realtime.kt)
     implementation(libs.coil.compose)
 
-    implementation("io.ktor:ktor-client-okhttp:3.3.3")
+    implementation(libs.ktor.client.okhttp)
 
 
 
-//    ksp(libs.androidx.room.compiler)
 
 
 
