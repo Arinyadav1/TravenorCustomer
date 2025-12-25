@@ -8,6 +8,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.realtime.PostgresAction
+import io.github.jan.supabase.realtime.RealtimeChannel
 import io.github.jan.supabase.realtime.channel
 import io.github.jan.supabase.realtime.decodeRecord
 import io.github.jan.supabase.realtime.postgresChangeFlow
@@ -27,35 +28,27 @@ import kotlinx.serialization.json.decodeFromJsonElement
 
 
 class BookingRepositoryImpl(
-    private val supabaseClient: SupabaseClient
+    private val supabaseClient: SupabaseClient,
+    private val realtimeChannel: RealtimeChannel
 ) : BookingRepository {
 
-    override fun bookingStatus(): Flow<Booking> = callbackFlow {
+    private var realtimeFlow: Flow<Booking>? = null
 
-        val channel = supabaseClient.channel(Constants.BOOKING)
+    override suspend fun bookingStatus(): Flow<Booking>? {
+        if (realtimeChannel.status.value != RealtimeChannel.Status.SUBSCRIBED) {
 
-        val realtimeFlow =
-            channel.postgresChangeFlow<PostgresAction.Update>(
+            realtimeFlow = realtimeChannel.postgresChangeFlow<PostgresAction.Update>(
                 schema = Constants.PUBLIC_SCHEME
             ) {
                 table = Constants.BOOKING
+            }.map { event ->
+                event.decodeRecord<Booking>()
             }
 
-        val job = realtimeFlow
-            .onEach { event ->
-                val booking = Json.decodeFromJsonElement<Booking>(event.record)
-                trySend(booking).isSuccess
-            }
-            .launchIn(this)
+            realtimeChannel.subscribe()
 
-        channel.subscribe()
-
-        awaitClose {
-            job.cancel()
-            launch {
-                channel.unsubscribe()
-            }
         }
+        return realtimeFlow
     }
 
 

@@ -11,10 +11,7 @@ import com.example.travenorcustomer.features.navigation.DetailScreenRoute
 import com.example.travenorcustomer.model.Booking
 import com.example.travenorcustomer.model.Destination
 import com.example.travenorcustomer.model.Status
-import io.github.jan.supabase.SupabaseClient
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,23 +30,25 @@ data class DetailsViewModel(
     }
 
     private fun bookingStatus() {
-        bookingRepository.bookingStatus()
-            .onEach { booking ->
-                if (
-                    Status.Accept.name == booking.status && state.requestId == booking.id
-                ) {
-
-                    sendEvent(DetailsEvent.OnAcceptBooking)
-
-                } else {
-                    sendEvent(DetailsEvent.OnNavigateBack)
+        viewModelScope.launch {
+            bookingRepository.bookingStatus()
+                ?.catch { }
+                ?.collect { booking ->
+                    Log.d("ARINYADAV", booking.toString())
+                    if (
+                        Status.Accept.name == booking.status && state.requestId == booking.id
+                    ) {
+                        sendEvent(DetailsEvent.OnAcceptBooking)
+                    } else {
+                        sendEvent(DetailsEvent.OnNavigateBack)
+                    }
                 }
-            }
-            .catch { }
-            .launchIn(viewModelScope)
+
+        }
     }
 
     private fun requestBooking(booking: Booking) {
+
         sendEvent(DetailsEvent.OnRequestBooking)
 
         viewModelScope.launch {
