@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.travenorcustomer.R
@@ -35,7 +36,7 @@ import com.example.travenorcustomer.ui.theme.AppTypography
 @Composable
 fun OnBoardScreen(
     modifier: Modifier = Modifier,
-    navigateToSignInScreen : () -> Unit
+    navigateToSignInScreen: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -59,18 +60,23 @@ fun OnBoardScreen(
         Spacer(Modifier.height(60.dp))
 
         Column(
-            modifier = Modifier.padding(horizontal = 50.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(R.string.on_board_title_life_is_short),
-                style = AppTypography.onBoardTitle
+                style = AppTypography.onBoardTitle,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Clip
             )
 
             Row {
                 Text(
-                    text = stringResource(R.string.on_board_title_world) +" ",
-                    style = AppTypography.onBoardTitle
+                    text = stringResource(R.string.on_board_title_world) + " ",
+                    style = AppTypography.onBoardTitle,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Clip
                 )
                 Box(
                     modifier = Modifier.width(IntrinsicSize.Min),
@@ -95,6 +101,8 @@ fun OnBoardScreen(
             Spacer(Modifier.height(15.dp))
 
             Text(
+                modifier = modifier.padding(horizontal = 40.dp),
+                maxLines = 3,
                 text = stringResource(R.string.on_board_description),
                 color = AppColors.lightSub,
                 style = AppTypography.onBoardDescription
