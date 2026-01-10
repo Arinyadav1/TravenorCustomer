@@ -12,11 +12,17 @@ import com.example.travenorcustomer.ui.theme.TravenorCustomerTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
+        var shouldShowSplashScreen = true
+        installSplashScreen().setKeepOnScreenCondition { shouldShowSplashScreen }
+
         enableEdgeToEdge()
         setContent {
             TravenorCustomerTheme {
-                AppRoot()
+                AppRoot(
+                    onSplashScreenRemoved = {
+                        shouldShowSplashScreen = false
+                    }
+                )
             }
         }
     }

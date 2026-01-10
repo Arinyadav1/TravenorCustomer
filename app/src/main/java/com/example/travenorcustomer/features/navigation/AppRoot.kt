@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -28,10 +29,13 @@ object OnBoardScreenRoute
 object SignInScreenRoute
 
 @Serializable
+object SplashRoute
+
+@Serializable
 object HomeScreenRoute
 
 @Serializable
-data class DetailScreenRoute(val destinationId: String, val userId : String)
+data class DetailScreenRoute(val destinationId: String, val userId: String)
 
 @Serializable
 data class VerificationScreenRoute(val email: String)
@@ -40,21 +44,52 @@ data class VerificationScreenRoute(val email: String)
 @Composable
 fun AppRoot(
     modifier: Modifier = Modifier,
+    onSplashScreenRemoved: () -> Unit,
     viewModel: AppRootViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
 
     val session = viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(session.value) {
+        when (session.value) {
+
+            is SessionStatus.Authenticated -> {
+                onSplashScreenRemoved()
+                navController.navigate(HomeScreenRoute) {
+                    popUpTo(SplashRoute) { inclusive = true }
+                }
+            }
+
+            is SessionStatus.NotAuthenticated -> {
+                onSplashScreenRemoved()
+                navController.navigate(OnBoardScreenRoute) {
+                    popUpTo(SplashRoute) { inclusive = true }
+                }
+            }
+
+            SessionStatus.Initializing -> {
+                // show splashscreen do nothing
+            }
+
+            is SessionStatus.RefreshFailure -> {
+                onSplashScreenRemoved()
+                navController.navigate(OnBoardScreenRoute) {
+                    popUpTo(SplashRoute) { inclusive = true }
+                }
+            }
+        }
+    }
+
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = when (session.value) {
-                is SessionStatus.Authenticated -> HomeScreenRoute
-                is SessionStatus.NotAuthenticated -> OnBoardScreenRoute
-                else -> HomeScreenRoute
-            }
+            startDestination = SplashRoute
         ) {
+
+            composable<SplashRoute> { /* This route exists only to have a safe startDestination */ }
+
             composable<OnBoardScreenRoute> {
                 OnBoardScreen(
                     modifier = modifier,
@@ -107,6 +142,6 @@ fun NavController.navigateToVerificationScreen(email: String) {
     this.navigate(VerificationScreenRoute(email = email))
 }
 
-fun NavController.navigateToDetailScreen(destinationId: String, userId : String) {
+fun NavController.navigateToDetailScreen(destinationId: String, userId: String) {
     this.navigate(DetailScreenRoute(destinationId = destinationId, userId = userId))
 }
